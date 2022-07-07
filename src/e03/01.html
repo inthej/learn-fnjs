@@ -1,0 +1,33 @@
+<meta charset="UTF-8">
+
+<script>const log = console.log</script>
+
+ # 제너레이터/이터레이터
+  : 제너레이터: 이터레이터이자 이터러블을 생성하는 함수이다
+
+ # 제너레이터 특징
+- 제너레이터는 Symbol.iterator 를 가지고 있다.
+- 제너레이터는 well-formed 이터레이터를 리턴하는 함수이다
+- 제너레이터는 리턴값을 가질 수 있지만.. 리턴값은 순회대상 값은 아니고.. 이터레이터 값이 done: true 가 될적에 발생된느 값이다
+
+- 제너레이터는 순회할 값을 문장으로 표현하는 것이다 라고 말 할수 있다..
+- 제너레이터를 통해서 자바스크립트에서는 사실상.. 어떠한 상태나 어떠한 값이든 사실상 순회할 수 있도록 만들 수 있다..
+<script>
+
+  function* gen() {
+    yield 1
+    if (false) yield 2
+    yield 3
+    return 100 // 리턴값을 만들 수 있지만... 순회값은 아니다. done: true 가 될적에 최초한번 리턴되는 값
+  }
+  const iter = gen()
+  log(iter[Symbol.iterator]) // Symbol.iterator 를 가지고있다..
+  log(iter[Symbol.iterator]() === iter) // 제너레이터는 well-formed 이터레이터를 리턴하는 함수이다
+  log(iter.next())
+  log(iter.next())
+  log(iter.next())
+  log(iter.next())
+  log(iter.next())
+
+  for (const a of gen()) log(a)
+</script>
