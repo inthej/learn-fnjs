@@ -1,0 +1,74 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+
+# odds
+
+<script>
+  // 입력된 i만큼 증가하는 함수
+  function *infinity(i = 0) {
+    while (true) yield i++
+  }
+
+  // limit 을 생성한다
+  function *limit(l, iter) {
+    for (const a of iter) {
+      yield a
+      if (a === l) return
+    }
+  }
+
+  // 홀수만 뽑는 함수
+  function *odds(l) {
+    for (const a of limit(l, infinity(1))) {
+      if (a % 2) yield a
+    }
+  }
+
+  const odd = odds(10)
+  log(odd.next())
+  log(odd.next())
+  log(odd.next())
+  log(odd.next())
+  log(odd.next())
+  log(odd.next())
+  log(odd.next())
+  log(odd.next())
+  log(odd.next())
+
+  for (const a of odds(100)) log(a)
+</script>
+
+<script>
+  console.clear()
+
+  function *infinity2(i = 0) {
+    while (true) yield i++
+  }
+
+  function *limit2(l, iter) {
+    for (const a of iter) {
+      yield a
+      if (a === l) return
+    }
+  }
+
+  function *odds2(l) {
+    for (const a of limit2(l, infinity2(1))) {
+      if (a % 2) yield a
+    }
+  }
+
+  const odd2 = odds2(10)
+  log(odd2.next())
+  log(odd2.next())
+  log(odd2.next())
+  log(odd2.next())
+  log(odd2.next())
+  log(odd2.next())
+  log(odd2.next())
+  log(odd2.next())
+  log(odd2.next())
+  log(odd2.next())
+
+
+</script>
