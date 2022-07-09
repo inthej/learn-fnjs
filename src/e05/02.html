@@ -1,0 +1,37 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+
+# pipe
+- 함수를 리턴하는 함수
+- 전달된 함수들을 연속적으로 실행하면서 축약하는 하나의 함수를 만드는데 사용했다.
+- 파이프함수는 연속되는 함수들을 실행하는 하나의 함수이다.
+
+# 다른 예시가 필요하다
+- pipe 함수부터 이해가 좀 부족하다.
+- go, pipe 함수에 대한 정의를 다시 점검해 보고 확실하게 알고 넘거가야겠다는 필요성을 느꼇다.
+- 다른 예시를 참고하여 학습을 해보자
+
+<script src="../common/jfs01.js"></script>
+<script>
+
+  const go = (...args) => reduce((a, f) => f(a), args)
+  const pipe = (f, ...fs) => (...as) => go(f(...as), ...fs)
+
+  go(
+    0,
+    a => a + 1,
+    a => a + 10,
+    a => a + 100,
+    log)
+
+  const f = pipe(
+    (a, b) => a + b,
+    a => a + 1,
+    a => a + 10,
+    a => a + 100,
+    log
+  )
+
+  f(0, 1)
+
+</script>
