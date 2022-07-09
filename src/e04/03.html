@@ -1,0 +1,56 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+
+# reduce
+
+
+- 리듀서는ㄴ 엘리먼트에 접근하면서 결과물을 축약하는 일을 수행한다.
+자바스크립트 array 에는 기본적으로 리듀서 메서드가 존재하지만 이터러블 하지 않다.
+
+반면
+사용자정의로 추상화한 reduce 함수는 이터러블 프로토콜을 따르도록 추상화 되어있다.
+set, map, document 등 어떠한 이터레이터를 넘기더라도 수행이 된다.
+추상화 레벨이 높으면 높을수록 사용성이 편리해 지는거 같다..
+
+해당 예시를 통해서 새롭게 알게된 점은
+사용성의 편의를 위해 acc 를 전달하지 않는 경우의 대한 예외처리였다.
+
+강의를 보기이전에 비지니스로직을 좀 생각해보았는데..
+구현은 될 수 있을거 같다고 생각이 들었지만 로직이 심플하지가 않았다.
+이유는 이터레이터의 특징을 잘 몰랐고, 그로인해서 응용하지 못했던 점과..
+로직 구현에 대한 사고방식의 미숙함인거 같다.
+
+아래의 경우를 알게 되었다.
+3개의 필수인자 사용인데 편의를 위해 2개만 전달된느경우 어떻게 로직을 구현해야할까..
+1. 함수 상단에서 인자들을 목적에 맞는 것으로 초기화 해준다.
+2. 연속되는 데이터의 첫번째 인자를 pop 하는 방식을 사용하면 로직이 간단해 진다.
+이터레이터에서는 다음값 확인을 next() 메소드를 사용하고 특징으로 기존데이터가 유지된다는게 큰 차이점이다.
+
+결국 로직 상단에서 인자들을 목적에 맞도록 초기화를 해준다면..
+하단로직은 문제없을 것이다..
+이게 중요한거 같다.
+
+<script>
+  const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+  log(nums)
+  log(nums.reduce((acc, val) => acc + val, 0))
+
+  function reduce(f, acc, iter) {
+    if (!iter) {
+      iter = acc[Symbol.iterator]()
+      acc = iter.next().value
+    }
+
+    for (const n of iter) {
+      acc += n
+    }
+    return acc
+  }
+
+  const add = (a, b) => a + b
+  log(add(add(add(add(add(add(add(add(add(1, 2), 3), 4), 5), 6), 7), 8), 9), 10))
+  log(reduce(add, 0, nums))
+  log(reduce(add, nums))
+  log(reduce(add, 0, [1, 2, 3, 4, 5]))
+  log(reduce(add, [1, 2, 3, 4, 5]))
+</script>

@@ -1,0 +1,26 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+
+# filter
+
+필터 함수는 함수형 프로그래밍에서 if 문을 없앨적에 사용한다.
+조건은 외부에 위임하므로서 사용하는 쪽에서 조건을 명시해서 사용할 수 있다.
+마찬가지로 외부세상에 부수효과를 주는 코드는 없애고 리턴값으로 처리해야한다.
+<script>
+  const menus = [
+    { name: 'espresso', price: 3000 },
+    { name: 'americano', price: 4500 },
+    { name: 'caffe latte', price: 5000 },
+    { name: 'cappuccino', price: 5500 },
+  ]
+
+  function filter(f, iter) {
+    const res = []
+    for (const e of iter) {
+      if (f(e)) res.push(e)
+    }
+    return res
+  }
+
+  log(...filter(menu => menu.price < 5000, menus))
+</script>
