@@ -1,0 +1,52 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+
+# map
+
+<script>
+  function map(f, iter) {
+    const res = []
+    for (const el of iter) {
+      res.push(f(el))
+    }
+    return res
+  }
+
+  const products = [
+    { name: '반팔티', price: 15000},
+    { name: '긴팔티', price: 25000},
+    { name: '츄리닝', price: 35000},
+    { name: '코트', price: 45000},
+    { name: '패딩', price: 55000},
+  ]
+
+  const names = map(p => p.name, products)
+  log(names)
+
+  const prices = map(p => p.price, products)
+  log(prices)
+
+  console.clear()
+  log([1, 2, 3].map)
+  log(document.querySelectorAll('*').map) // array 가 아니다... undefined
+  log(map(el => el.nodeName, document.querySelectorAll('*')))
+
+
+  console.clear()
+  function *gen() {
+    yield 1
+    yield 2
+    if (false) yield 3
+    yield 4
+  }
+  log(map(a => a * a, gen()))
+
+  const m = new Map()
+  m.set('a', 1)
+  m.set('b', 2)
+  m.set('3', 3)
+  log('m:', m)
+  const iter = m[Symbol.iterator]()
+  log(iter.next())
+  log(map(([k, v]) => [k, v * v], iter))
+</script>
