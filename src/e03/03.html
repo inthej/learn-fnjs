@@ -1,0 +1,28 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+
+# for...of, 전개연산자, 구조분해, 나머지연산자
+
+<script>
+  function* odds(limit) {
+    for (let i = 0; i < limit; i++) {
+      if (i % 2) yield i
+    }
+  }
+
+  for (const a of odds(10)) {
+    log(a)
+  }
+
+  log(...odds(10))
+  log([...odds(10), ...odds(20)])
+
+  const [head, ...tail] = odds(10)
+  log('head:', head)
+  log('tail:', tail)
+
+  const [a, b, ...rest] = odds(10)
+  log('a:', a)
+  log('b:', b)
+  log('rest:', rest)
+</script>

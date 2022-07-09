@@ -37,38 +37,3 @@
 
   for (const a of odds(100)) log(a)
 </script>
-
-<script>
-  console.clear()
-
-  function *infinity2(i = 0) {
-    while (true) yield i++
-  }
-
-  function *limit2(l, iter) {
-    for (const a of iter) {
-      yield a
-      if (a === l) return
-    }
-  }
-
-  function *odds2(l) {
-    for (const a of limit2(l, infinity2(1))) {
-      if (a % 2) yield a
-    }
-  }
-
-  const odd2 = odds2(10)
-  log(odd2.next())
-  log(odd2.next())
-  log(odd2.next())
-  log(odd2.next())
-  log(odd2.next())
-  log(odd2.next())
-  log(odd2.next())
-  log(odd2.next())
-  log(odd2.next())
-  log(odd2.next())
-
-
-</script>
