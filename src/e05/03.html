@@ -1,0 +1,78 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+
+# go
+
+# curry
+- 코드(함수)를 값으로 다루면서 받아둔 함수를 내가 원하는 시점에 평가시킨다
+- 함수를 받아서 함수를 리턴한다
+- 인자가 원하는 갯수만큼 들어왔을때 받아두었던 함수를 원하는 시점에 평가시키는 역할을 한다
+
+: curry 를 사용해보니 이제야 함수형 프로크래밍의 모습처럼 코딩 스타일이 만들어지기 시작했다.
+커링형태로 평가시점을 늦출 수 있기는게 신의 한수다. 가독성이 정말 많이 좋아졌다.
+curry 로직이 첨에는 이해하기 어려웠는데.. add 함수에 적용하는 방법으로 살펴보니깐..
+어려운 로직이 아니다..
+
+<script>
+  const products = [
+    { name: '아메리카노', price: 2500 },
+    { name: '카페라떼', price: 3000 },
+    { name: '곡물라떼', price: 3500 },
+    { name: '카푸치노', price: 4000 },
+  ]
+
+  const curry = f => (a, ..._) => _.length ? f(a, ..._)
+                                           : (..._) => f(a, ..._)
+
+  const map = curry(function (f, iter) {
+    const res = []
+    for (const el of iter) {
+      res.push(f(el))
+    }
+    return res
+  })
+
+  const filter = curry(function (f, iter) {
+    const res = []
+    for (const el of iter) {
+      if (f(el)) res.push(el)
+    }
+    return res
+  })
+
+  const reduce = curry(function (f, acc, iter) {
+    if (!iter) {
+      iter = acc[Symbol.iterator]()
+      acc = iter.next().value
+    }
+
+    for (const el of iter) {
+      acc = f(acc, el)
+    }
+    return acc
+  })
+
+  const go = (...fs) => reduce((acc, f) => f(acc), fs)
+  const add = curry((a, b) => a + b)
+
+  log(add(1, 2))
+  log(add(1)(2))
+
+  // curry 미사용
+  go(
+    products,
+    products => filter(p => p.price < 3500, products),
+    products => map(p => p.price, products),
+    prices => reduce(add, prices),
+    log
+  )
+
+  // curry 사용
+  go(
+    products,
+    filter(p => p.price < 3500),
+    map(p => p.price),
+    reduce(add),
+    log
+  )
+</script>
