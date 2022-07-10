@@ -52,7 +52,8 @@ curry 로직이 첨에는 이해하기 어려웠는데.. add 함수에 적용하
     return acc
   })
 
-  const go = (...fs) => reduce((acc, f) => f(acc), fs)
+  const go = (...args) => reduce((acc, f) => f(acc), args)
+  const pipe = (...fs) => (acc) => go(acc, ...fs)
   const add = curry((a, b) => a + b)
 
   log(add(1, 2))
