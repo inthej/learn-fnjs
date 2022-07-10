@@ -1,0 +1,60 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+
+# html 출력
+
+<div id="app"></div>
+
+<script src="../common/j_02.js"></script>
+<script>
+  const products = [
+    { name: '아메리카노', price: 2500, quantity: 1, is_selected: true },
+    { name: '카페라떼', price: 3000, quantity: 2, is_selected: false },
+    { name: '곡물라떼', price: 3500, quantity: 3, is_selected: true },
+    { name: '카푸치노', price: 4000, quantity: 4, is_selected: false },
+    { name: '콜드브루', price: 5000, quantity: 5, is_selected: false },
+  ]
+
+  const go = (...args) => reduce((acc, f) => f(acc), args)
+
+  const add = curry((a, b) => a + b)
+
+  const sum = curry((predicate, iter) => go(iter,
+    map(predicate),
+    reduce(add)))
+
+  const total_quantity = products => sum(p => p.quantity, products)
+  const total_price = products => sum(p => p.price * p.quantity, products)
+  log(total_quantity(products))
+  log(total_price(products))
+
+  document.querySelector('#app').innerHTML = `
+    <table>
+      <thead>
+        <tr>
+          <th></th>
+          <th>상품명</th>
+          <th>가격</th>
+          <th>수량</th>
+          <th>총가격</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${go(products, sum(
+          p => `
+            <tr>
+              <td><input type="checkbox" ${p.is_selected ? 'checked' : ''}/></td>
+              <td>${p.name}</td>
+              <td>${p.price}</td>
+              <td><input type="number" value="${p.quantity}" style="text-align: right"/></td>
+              <td>${p.price * p.quantity}</td>
+            </tr>
+        `))}
+        <tr>
+          <td colspan="3">합계</td>
+          <td><input type="number" value="${total_quantity(filter(p => p.is_selected, products))}" style="text-align: right"/></td>
+          <td>${total_price(filter(p => p.is_selected, products))}</td>
+        </tr>
+      </tbody>
+    </table>`;
+</script>
