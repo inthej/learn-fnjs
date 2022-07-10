@@ -1,0 +1,41 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+
+# 함수 조합
+: pipe 함수를 통해서 중복되는 함수 실행을 분리 할 수 있다.
+filter 함수의 조건사용은 predicate 으로 추상화하여 함수를 사용하는 외부에서 결정할 수 있도록 한다
+우선 네이밍 컨벤션은 function 은 snake case, method 는 camel case 로 구분해서 사용하고...
+이후에 js naming convention 을 한번 찾아봐야겠다.(어디를 참고해야 될지..)
+
+<script src="../common/j_02.js"></script>
+<script>
+  const products = [
+    { name: '아메리카노', price: 2500 },
+    { name: '카페라떼', price: 3000 },
+    { name: '곡물라떼', price: 3500 },
+    { name: '카푸치노', price: 4000 },
+  ]
+
+  const go = (...args) => reduce((acc, f) => f(acc), args)
+  const pipe = (...fs) => arg => go(arg, ...fs)
+  const add = curry((a, b) => a + b)
+
+  const total_price = pipe(
+    map(p => p.price),
+    reduce(add),
+  )
+
+  const base_total_price = predicate => pipe(
+    filter(predicate),
+    total_price
+  )
+
+  go(products,
+    base_total_price(p => p.price <= 3000),
+    log)
+
+  go(products,
+    base_total_price(p => p.price > 3000),
+    log)
+</script>
+
