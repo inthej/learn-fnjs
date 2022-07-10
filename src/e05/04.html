@@ -17,7 +17,7 @@ filter 함수의 조건사용은 predicate 으로 추상화하여 함수를 사�
   ]
 
   const go = (...args) => reduce((acc, f) => f(acc), args)
-  const pipe = (...fs) => arg => go(arg, ...fs)
+  const pipe = (f, ...fs) => (...as) => go(f(...as), ...fs)
   const add = curry((a, b) => a + b)
 
   const total_price = pipe(
@@ -37,5 +37,13 @@ filter 함수의 조건사용은 predicate 으로 추상화하여 함수를 사�
   go(products,
     base_total_price(p => p.price > 3000),
     log)
+
+  const f = pipe(
+    a => a + 1,
+    a => a + 10,
+    a => a + 100
+  )
+  log(f(0))
+  log(f(1))
 </script>
 
