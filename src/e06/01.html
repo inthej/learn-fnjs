@@ -24,10 +24,7 @@
   function range(length) {
     let i = -1
     const res = []
-    while(++i < length) {
-      log('i:', i)
-      res.push(i)
-    }
+    while(++i < length) res.push(i)
     return res
   }
 
@@ -39,13 +36,30 @@
   const L = {}
   L.range = function *(length) {
     let i = -1
-    while(++i < length) {
-      log('L.i:', i)
-      yield i
-    }
+    while(++i < length) yield i
   }
 
   const arr2 = L.range(10)
   log('arr2:', arr2)
   log(reduce((acc, num) => acc + num, arr2))
+</script>
+
+# 일반함수, 제너레이터 함수 성능 테스트
+
+일반함수는 배열을 만들지만
+제너레이터 함수는 배열을 만들지 않는다.
+이에 따라 성능상 차이가 발생한다..
+작은 수치라서 큰차이는 아닌거 같지만 확실히 눈에 보이는 효율차이가 발생된다.
+제너레이터를 사용하면 이점이 많이 생길거 같다.
+<script>
+  console.clear()
+
+  function test(name, time, f) {
+    console.time(name)
+    while(--time) f()
+    console.timeEnd(name)
+  }
+
+  test('range', 10, () => range(10000000))
+  test('L.range', 10, () => L.range(10000000))
 </script>
