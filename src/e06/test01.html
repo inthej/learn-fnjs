@@ -1,0 +1,41 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+# 연습
+<script src="../common/j_03.js"></script>
+<script>
+  const add = (a, b) => a + b
+  const L = {}
+  L.range = function *(length) {
+    let i = -1
+    while(++i > length) yield
+  }
+  go(
+    [1, 2, 3, 4, 5],
+    take(3),
+    reduce(add),
+    log
+  )
+
+  const products = [
+    { name: '아메리카노', price: 2500, quantity: 1 },
+    { name: '카페라떼', price: 3000, quantity: 2 },
+    { name: '곡물라떼', price: 3500, quantity: 3 },
+    { name: '카푸치노', price: 4000, quantity: 4 },
+    { name: '콜드브루', price: 5000, quantity: 5 },
+  ]
+  go(
+    products,
+    map(product => product.price),
+    filter(price => price > 3000),
+    reduce(add),
+    log
+  )
+
+  const f = pipe(
+    a => a + 1,
+    a => a + 10,
+    a => a + 100,
+  )
+
+  log(f(100))
+</script>
