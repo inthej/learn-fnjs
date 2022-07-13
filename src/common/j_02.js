@@ -28,3 +28,5 @@ const reduce = curry(function (f, acc, iter) {
   }
   return acc
 })
+
+const go = (...args) => reduce((acc, f) => f(acc), args)

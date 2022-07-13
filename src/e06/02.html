@@ -1,0 +1,63 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+
+# take
+- 테이크함수는 전달된 limit 갯수만큼 이터러블을 인자를 순회하여 뽑아내는 함수이다.
+- 전달된 인자를 제너레이터 함수를 넣을 경우 지정된 limit 만큼만 순회하기 때문에...
+take 와 제너레이터함수의 조합이 어울린거 같다.
+
+<script src="../common/j_02.js"></script>
+<script>
+  const take = curry(function (limit, iter) {
+    const res = []
+    for (const a of iter) {
+      res.push(a)
+      if (res.length === limit) return res
+    }
+    return res
+  })
+
+  function range(length) {
+    const res = []
+    let i = -1
+    while(++i < length) res.push(i)
+    return res
+  }
+
+  const L = {}
+  L.range = function*(length) {
+    let i = -1
+    while(++i < length) yield i
+  }
+
+  // for (const a of range(10)) log(a)
+  // for (const a of L.range(10)) log(a)
+
+  console.time('')
+  log(take(5, range(10000)))
+  console.timeEnd('')
+
+  console.time('')
+  log(take(5, L.range(10000)))
+  console.timeEnd('')
+
+  console.clear()
+
+  console.time('')
+  go(
+    range(1000000),
+    take(10),
+    reduce((acc, el) => acc + el),
+    log
+  )
+  console.timeEnd('')
+
+  console.time('')
+  go(
+    L.range(Infinity),
+    take(10),
+    reduce((acc, n) => acc + n),
+    log
+  )
+  console.timeEnd('')
+</script>
