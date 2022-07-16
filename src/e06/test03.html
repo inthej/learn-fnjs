@@ -15,6 +15,10 @@
 
 3. 코드의 분리 담당하는 pipe 함수를 잘 분리해야 할거 같다. IDE 에서 제공하는 method 추출 리팩토링 기능이 되지 않아 조금 아쉽다.
 코드를 정확하게 이해하지 못하는 경우 함수를 구현하는 쪽에서 실수할수 있을거 같다.
+
+4. 느그한 연산을 수행하는 로직에 take 추출할 경우 다시 일반함수 사용으로 전환된다.
+take 함수는 제한된 수량을 뽑아내는 함수이다. 일반함수든 제너레이트함수든 간에 수량을 뽑아낼 경우 이후부터는 일반함수 사용이 가능하다.
+위에 구축했던 L.reduce 다시 확인이 필요하다
 <script src="../common/j_05.js"></script>
 <script>
   const products = [
@@ -49,11 +53,15 @@
 
   const f = pipe(filter(n => n % 2),
     map(n => n * 10),
-    reduce((acc, cur) => acc + cur))
+    take(10),
+    reduce((acc, cur) => acc + cur),
+    log)
 
   const lf = pipe(L.filter(n => n % 2),
     L.map(n => n * 10),
-    L.reduce((acc, cur) => acc + cur))
+    L.reduce((acc, cur) => acc + cur),
+    // take(10),
+    log)
 
   test('N', () => f(range(100000)))
   test('L', () => lf(L.range(Infinity)))
