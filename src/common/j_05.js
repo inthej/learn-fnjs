@@ -65,14 +65,3 @@ L.filter = curry(function* (f, iter) {
     if (f(a)) yield a
   }
 })
-
-L.reduce = curry(function* (f, acc, iter) {
-  if (!iter) {
-    iter = acc[Symbol.iterator]()
-    acc = iter.next().value
-  }
-  for (const a of iter) {
-    acc = f(acc, a)
-    yield acc
-  }
-})

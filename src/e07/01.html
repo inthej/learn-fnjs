@@ -1,0 +1,18 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+# 결과를 만드는 take, reduce
+
+- take 와 reduce 는 결과를 뽑아내는 역할을 한다. 배열이든 제너레이트든지 간에 중간에 결과를 뽑아내여 연산을 담당한다.
+그로서 L.reduce 사용이 필요없을거 같다. 지연성이 있는 로직에 결과를 추출한 이후 다시 일반함수로 연산할 수 있다.
+
+<script src="../common/j_05.js"></script>
+<script>
+
+  const queryStr = pipe(
+    Object.entries,
+    map(([k, v]) => `${k}=${v}`),
+    reduce((acc, cur) => `${acc}&${cur}`))
+
+  log(queryStr({ limit: 10, offset: 10, type: 'notice' }))
+
+</script>
