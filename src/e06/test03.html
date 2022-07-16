@@ -1,0 +1,63 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+# 지연성1
+
+1. 일반함수와 지연함수를 구현해보았다. 지연함수가 효율성이 좋지만 반면 디버깅이 어렵다.
+실제로 아래예시에서 지연함수의 결과를 출력해보려고했는데 무한로딩이 걸려 원인을 확인해 보니
+계산을 담당하는 reduce 함수를 지연함수로 구축하지 않았던 문제가 있었는데
+원인을 잘 몰라 디버깅 시간이 조금 걸렸다.
+지연함수는 지연함수끼리 캡슐화가 되어야 된다.
+개인적인 생각으로 일반함수로 로직을 작성한 다음 정상유무를 확인 및 이상이있을 경우 디버깅 까지 진행하고
+지연함수료 교체하는 식으로 하면 어떠할까 싶다.
+
+2. 함수형 기본 로직을 반복적으로 구현함으로서 이해했고 이제는 기본로직은 머리속으로 구축이 가능하다.
+더군다나 예제에는 없었던 L.reduce 함수를 응용해서 만들었다.
+
+3. 코드의 분리 담당하는 pipe 함수를 잘 분리해야 할거 같다. IDE 에서 제공하는 method 추출 리팩토링 기능이 되지 않아 조금 아쉽다.
+코드를 정확하게 이해하지 못하는 경우 함수를 구현하는 쪽에서 실수할수 있을거 같다.
+<script src="../common/j_05.js"></script>
+<script>
+  const products = [
+    { name: '노트', price: 1000 },
+    { name: '샤프', price: 1300 },
+    { name: '볼펜', price: 1500 },
+    { name: '형광펜', prices: 1800 },
+    { name: '삼색볼펜', price: 3500 }
+  ]
+
+  const test = (name, f) => {
+    console.time(name)
+    f()
+    console.timeEnd(name)
+  }
+
+  go(products,
+    filter(p => p.price < 2000),
+    map(p => p.price),
+    take(2),
+    reduce((acc, cur) => acc + cur),
+    log)
+
+  go(products,
+    L.filter(p => p.price < 2000),
+    L.map(p => p.price),
+    take(2),
+    reduce((acc, cur) => acc + cur),
+    log)
+
+  console.clear()
+
+  const f = pipe(filter(n => n % 2),
+    map(n => n * 10),
+    reduce((acc, cur) => acc + cur))
+
+  const lf = pipe(L.filter(n => n % 2),
+    L.map(n => n * 10),
+    L.reduce((acc, cur) => acc + cur))
+
+  test('N', () => f(range(100000)))
+  test('L', () => lf(L.range(Infinity)))
+
+
+
+</script>

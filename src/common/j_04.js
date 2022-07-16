@@ -1,5 +1,5 @@
 const curry = (f) => (a, ...args) => args.length ? f(a, ...args)
-  : (...as) => f(a, ...as)
+                                                 : (...as) => f(a, ...as)
 
 const map = curry(function* (f, iter) {
   for (const a of iter) {
