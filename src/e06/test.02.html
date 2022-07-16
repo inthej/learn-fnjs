@@ -1,0 +1,30 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+# test
+<script src="../common/j_04.js"></script>
+<script>
+  const product = [
+    { name: '노트', price: 1000 },
+    { name: '샤프', price: 1300 },
+    { name: '볼펜', price: 1500 },
+    { name: '형광펜', prices: 1800 },
+    { name: '삼색볼펜', price: 3500 }
+  ]
+
+  go(
+    product,
+    filter(p => p.price < 2000),
+    map(p => p.price),
+    reduce((acc, cur) => acc + cur),
+    log
+  )
+
+  const f = pipe(
+    a => a + 1,
+    a => a + 10,
+    a => a + 100
+  )
+  log(f(0))
+
+
+</script>
