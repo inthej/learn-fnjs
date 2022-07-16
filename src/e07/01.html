@@ -5,14 +5,58 @@
 - take 와 reduce 는 결과를 뽑아내는 역할을 한다. 배열이든 제너레이트든지 간에 중간에 결과를 뽑아내여 연산을 담당한다.
 그로서 L.reduce 사용이 필요없을거 같다. 지연성이 있는 로직에 결과를 추출한 이후 다시 일반함수로 연산할 수 있다.
 
+- join 함수는 리듀스 함수로 응용하여 구현할 수 있다. separator 의 기본값은 , string 결과값을 만들면된다.
+그리고 기본 array 의 join 함수와는 다르게 이터레이터 일경우 다형성있게 사용할 수 있다.
+
+- Object.entries 함수 역시 느긋하게 개선할 수 있다. 연산을 바로 할 필요없다. 느긋하게 할경우 제너레이터 함수와 결합되는 경우 효율성이 좋아진다.
+
+- 이터러블 대신 제너레이터의 사용: 제너레이터는 array 같은 이터러블을 미리 만들지 않는다. 호출된적에만 그때 그때 필요한 이터레이터를 만들기 때문에 효율성 측면에서 앞선다.
+
 <script src="../common/j_05.js"></script>
 <script>
+  const join = curry((sep = ',', iter) =>
+    reduce((acc, cur) => `${acc}${sep}${cur}`, iter))
+
+  L.entries = function* (obj) {
+    for (const k in obj) {
+      yield [k, obj[k]]
+    }
+  }
+
+  const createObj = (limit) => {
+    const obj = {}
+    let i = 0
+    while (i++ < limit) obj[`key${i}`] = i
+    return obj
+  }
+
+  L.createObj = function* (limit) {
+    const obj = {}
+    let i = 0
+    while (i++ < limit) {
+      obj[`key${i}`] = i
+      yield obj
+    }
+  }
 
   const queryStr = pipe(
     Object.entries,
     map(([k, v]) => `${k}=${v}`),
-    reduce((acc, cur) => `${acc}&${cur}`))
+    join('&'))
 
-  log(queryStr({ limit: 10, offset: 10, type: 'notice' }))
+  L.queryStr = pipe(
+    L.entries,
+    L.map(([k, v]) => `${k}=${v}`),
+    join('&'))
+
+  console.time('')
+  queryStr(createObj(100000))
+  console.timeEnd('')
+
+  console.time('L')
+  L.queryStr(L.createObj(100000))
+  console.timeEnd('L')
+
+  log(L.queryStr({ limit: 10, offset: 10, type: 'notice '}))
 
 </script>
