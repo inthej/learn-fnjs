@@ -1,0 +1,61 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+# take, find
+- find 함수는 이터러블에서 특정 조건에 만족하는 첫번째 요소를 찾는 함수이다.
+조건과 이터러블을 받아서 이터러블을 전달하여 연속된 함수들을 실행하는 go 함수를 사용하면 쉽게 구현할 수 있다.
+go(iter, filter, take, 요소전환) 로직이 전부이다.
+함수형 프로그래밍의 장점중 하나가 데이터 조합성이 좋은 것이다.
+함수를 구현할적에 함수 조합을 통하여 구축이 점점 쉬워지는 느낌을 받았다.
+
+- 지연(L) 관련 함수를 디버깅 할적에 콤마(,) 연산자를 사용하면 loop 를 몇번 순회하는지 확인하기 편리하다.
+이것을 통하여 우려하던 디버깅이 어려울거 같다는 생각이 사라졌다.
+예전에 생각했었던 일반함수로 우선 구축하고 디버깅이 문제없을적에 지연 함수로 교체하자고 했던 생각이 잘못됬다는것을 깨달았다.
+콤마연산자를 사용하면 함수조합 로직에서 디버깅하기 정말 유용한것 같다.
+
+<script src="../js/j_06.js"></script>
+<script>
+  const users = [
+    { age: 11 },
+    { age: 21 },
+    { age: 31 },
+    { age: 41 },
+    { age: 51 },
+    { age: 12 },
+    { age: 22 },
+    { age: 32 },
+    { age: 42 },
+    { age: 52 },
+  ]
+
+  const find = curry((f, iter) => go(
+    iter,
+    L.filter(f),
+    take(1),
+    ([el]) => el
+  ))
+
+  go(users,
+    filter(u => (console.log('filter user:', u), u.age < 30)),
+    map(u => (console.log('map user:', u), u.age)),
+    take(1),
+    log)
+
+  console.clear()
+
+  go(users,
+    L.filter(u => (console.log('filter user:', u), u.age < 30)),
+    L.map(u => (console.log('map user:', u), u.age)),
+    take(1),
+    log)
+
+  console.clear()
+  go(users,
+    find(u => u.age === 11),
+    log)
+
+  go(users,
+    L.map(u => u.age),
+    find(age => age === 21),
+    log)
+
+</script>

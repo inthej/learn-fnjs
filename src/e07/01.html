@@ -12,7 +12,7 @@
 
 - 이터러블 대신 제너레이터의 사용: 제너레이터는 array 같은 이터러블을 미리 만들지 않는다. 호출된적에만 그때 그때 필요한 이터레이터를 만들기 때문에 효율성 측면에서 앞선다.
 
-<script src="../common/j_05.js"></script>
+<script src="../js/j_05.js"></script>
 <script>
   const join = curry((sep = ',', iter) =>
     reduce((acc, cur) => `${acc}${sep}${cur}`, iter))
@@ -57,6 +57,6 @@
   L.queryStr(L.createObj(100000))
   console.timeEnd('L')
 
-  log(L.queryStr({ limit: 10, offset: 10, type: 'notice '}))
+  log(L.queryStr({ limit: 10, offset: 10, type: 'notice'}))
 
 </script>
