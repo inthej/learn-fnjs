@@ -1,0 +1,28 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+# flatten
+
+- flatten 함수는 이터러블내에 있는 이터러블 요소들을 flat 하게 펼처 1차원 이터러블을 생성하는 함수이다.
+지연함수로 만들었고 예제는 2차원 배열만 flat 하게 펼치지만 이를 개선해서 이터러블 뎁스가 여러개 있다고 하더라도
+재귀함수를 통해서 플랫하게 펼처지도록 구현하였다
+
+- 재귀함수의 가장 중요한것은 멈추는 조건이 있어야 한다.
+ 멈춰지는 조건이 없을 경우 무한 로딩이 걸릴 것이다.
+
+<script src="../lib/fn_06.js"></script>
+<script>
+  log([...[1, 2], 3, 4, ...[5, 6], 7, 8, ...[9, 0]])
+
+  L.flatten = function* (iter) {
+    const isSymbolIterator = a => a && a[Symbol.iterator]
+    for (const a of iter) {
+      if (isSymbolIterator(a)) L.flatten(a)
+      yield a
+    }
+  }
+
+  go([...[1, 2], 3, 4, ...[5, 6, ...[66, 77]], 7, 8, ...[9, 0]],
+    L.flatten,
+    take(4),
+    log)
+</script>
