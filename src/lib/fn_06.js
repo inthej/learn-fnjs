@@ -42,6 +42,7 @@ const reduce = curry(function (f, acc, iter) {
 const go = (...args) => reduce((acc, f) => f(acc), args) // 연속되는 함수에 인자를 전달하는 함수
 const pipe = (f, ...fs) => (...as) => go(f(...as), ...fs) // 연속되는 함수를 실행하는 하나의 함수
 
-const map = curry(pipe(L.map, take(Infinity)))
-const filter = curry(pipe(L.filter, take(Infinity)))
-const range = pipe(L.range, take(Infinity))
+const takeAll = take(Infinity)
+const map = curry(pipe(L.map, takeAll))
+const filter = curry(pipe(L.filter, takeAll))
+const range = pipe(L.range, takeAll)

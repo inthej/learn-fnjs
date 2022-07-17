@@ -1,0 +1,58 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+# flatMap
+
+- flatMap 은 map 과 flatten 을 합쳐놓은 함수이다. array 에서 제공된 flatMap 은 다형성이 제공되지 않는다.
+iterable 요소들을 사용할 수 있는 추상화된 flatMap 을 구현하였다.
+
+- 이터러블 하위요소들을 모두 flatten 하고 매핑을 적용하는 flatMapAll 함수를 만들었다.
+기존 flatMap 은 map -> flatten 순서로 구현하였는데 순서를 변경하여 flatten -> map 형식으로 변경하여 구현하였다.
+
+- 기존 flatten 함수의 오류 수정하였다.
+flatten 되지 않았던 이슈를 수정, 하위요소가 SymbolIterator 일경우 재귀함수를 다시 호출하는데..
+마찬가지로 (*) 제너레이터로 함번더 사용하여 yield 해야 한다.
+제너레이터 함수를 재귀할적에는 yield 에 (*) 제너레이터를 사용하여 호출해야하는것을 알게 되었다.
+
+<script src="../lib/fn_06.js"></script>
+<script>
+  const isSymbolIterator = a => a && a[Symbol.iterator]
+
+  L.flatten = function* flatten(iter) {
+    for (const a of iter) {
+      if (isSymbolIterator(a)) yield* flatten(a)
+      else yield a
+    }
+  }
+
+
+  L.flatMap = curry(pipe(L.map, L.flatten))
+  const flatMap = curry(pipe(L.flatMap, takeAll))
+
+  go([[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+    // flatMap(a => a.map(b => b)),
+    flatMap(map(a => a)),
+    log)
+
+  go([[1, 2, 3], [4, 5, 6], [7, 8, 9]],
+    L.flatMap(L.map(a => a)),
+    takeAll,
+    log)
+
+
+  L.flatMapAll = curry((f, iter) => go(iter,
+    L.flatten,
+    L.map(f)
+  ))
+  const flatMapAll = curry(pipe(L.flatMapAll, takeAll))
+
+
+  go([1, 2, 3, 4, 5, [6, 7], [8, 9, [[10]]]],
+    L.flatMapAll(a => a * 2),
+    takeAll,
+    log)
+
+  go([1, 2, 3, 4, 5, [6, 7], [8, 9, [[10]]]],
+    flatMapAll(a => a * 2),
+    log)
+
+</script>
