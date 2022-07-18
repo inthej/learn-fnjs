@@ -1,0 +1,42 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+#test02
+<script src="../lib/fn_08.js"></script>
+<script>
+  const users = [
+    { name: '사용자1', age: 18 },
+    { name: '사용자2', age: 19 },
+    { name: '사용자3', age: 20 },
+    { name: '사용자4', age: 21 },
+    { name: '사용자5', age: 22 },
+    { name: '사용자6', age: 23 },
+    { name: '사용자7', age: 24 },
+    { name: '사용자8', age: 25 },
+  ]
+
+  go(users,
+    map(u => u.age),
+    filter(u => u < 20),
+    log)
+
+  go(users,
+    find(u => u.age === 18),
+    log)
+
+  const isSymbolIterator = a => a && a[Symbol.iterator]
+  L.flatten = function* f(iter) {
+    for (const a of iter) {
+      if (isSymbolIterator(a)) yield* L.flatten(a)
+      else yield a
+    }
+  }
+
+  L.flatMap = curry(pipe(L.map, L.flatten))
+  const flatMap = curry(pipe(L.flatMap, takeAll))
+
+  go([[1, 2], [3, 4], [5, 6], [7, 8]],
+    flatMap(map(n => n * 2)),
+    takeAll,
+    log)
+
+</script>
