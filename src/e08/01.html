@@ -1,0 +1,55 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+# Promise
+- Promise 가 callback 과 가장 큰 차이점은 비동기 상황을 일급 값으로 다룰수 있다는 점이다.
+(단순히 then 메서드를 통해서 결과를 꺼내보는 것이다.)
+- Promise 상태의 값은 대기, 성공, 실패를 다루는 일급 값으로 이루어져 있다.
+이 점을 정확하게 떠올리면서 프로그래밍 하는것과 아닌것의 차이가 응용하는 것에서 굉장히 많이 달라질 것이다.
+
+다시한번 되새기자.
+Promise 는 비동기 상황을 일급 값으로 다룰 수 있다.
+일금 값의 상태는 대기, 성공, 실패 3가지 이다.
+
+일급
+- Promise 는 비동기 상황을 값으로 다룰수 있다.
+값으로 다룰 수 있다는 이야기는 일급이라는 것이다.
+<script src="../lib/fn_08.js"></script>
+<script>
+
+  function add10(a, callback) {
+    setTimeout(() => callback(a + 10), 100)
+  }
+
+  const a =add10(1, res => {
+    add10(res, res => {
+      add10(res, res => {
+        add10(res, res => {
+          log(res)
+        })
+      })
+    })
+  })
+
+  log(a) // undefined
+
+  // Promise 를 리턴을 하고 있다. 비동기 상황을 일급 값으로 다룬다는 것이다. 이부분이 가장 중요하다.
+  function add20(a) {
+    return new Promise((resolve) => setTimeout(() => resolve(a + 20), 100))
+  }
+
+  const b = add20(1)
+            .then(add20)
+            .then(add20)
+            .then(add20)
+            .then(add20)
+            .then(log)
+
+  const c = add20(1, _ => log(_)) // then 대신 함수를 넘겨도 된다.
+  const d = c.then(r => r + 1) // Promise 의 비동기 상태를 일급 값으로 다루기 때문에 계속해서 작업을 연계해 나갈 수 있다.
+  const e = d.then(r => r + 1)
+
+  log(b) // promise 가 리턴되기 때문에 원하는 것을 다룰 수 있다.
+  log('c:', c)
+  log('d:', d)
+  log('e', e)
+</script>
