@@ -1,0 +1,42 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+# 테스트
+- 기본로직을 구현할 수 있는지 테스트합니다.
+로직을 구현할적마다 깔끔하게 구현이 되지 않고 한번씩 틀려 디버깅을 하게 된다.
+take, go 함수를 구현할적마다 한번 씩 틀리는거 같다.
+go 함수에서 pipe 함수로 축약하는 방법이 정확하게 이해가 되지 않는다.
+주말에.. 개념 학습을 다시 한번 해야겠다.
+<script src="../lib/fn_09.js"></script>
+<script>
+  const products = [
+    { name: '양말', price: 1500 },
+    { name: '면티', price: 2500 },
+    { name: '반팔티', price: 3500 },
+    { name: '긴팔티', price: 4500 },
+    { name: '코드', price: 5500 },
+  ]
+
+  const add = (a, b) => a + b
+  go(products,
+    filter(p => p.price < 3000),
+    map(p => p.price),
+    reduce(add),
+    log)
+
+  go(products,
+    find(p => p.price === 1500),
+    log)
+
+  const arr = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10]]
+  go(arr,
+    L.flatten,
+    takeAll,
+    log)
+
+  go(arr,
+    flatMap(a => a),
+    reduce(add),
+    log)
+
+
+</script>
