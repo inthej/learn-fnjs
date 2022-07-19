@@ -1,0 +1,23 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+# 함수 합성관점에서의 Promise 와 모나드
+- Promise 는 비동기적인 상황에서 함수합성을 안전하게 하게 하기위한 도구이다.
+- 비동기 값을 가지고 연속적인 함수 합성을 안전하게 할수있는 모나드라고도 설명 할 수 있다.
+
+# Composition
+<script type="module">
+  const add1 = a => a + 1;
+  const add10 = a => a * a;
+
+  log(add10(add1(1)));
+  log(add10(add1())); // 함수합성에서 인자가 전달되지 않을경우 원치않은 결과가 발생할 수 있다. 모나드는 이러한 상황을 제외시킨다.
+
+  [1].map(add1).map(add10).forEach(r => log(r)); // 값이 있을 적에는 정상출력 된다
+  [].map(add1).map(add10).forEach(r => log(r)); // 값이 없어도 문제 없다
+  [1, 2, 3].map(add1).map(add10).forEach(r => log(r)) // 값이 여러개 들어가도 상관없다
+
+  Array.of(1).map(add1).map(add10).forEach(r => log(r)) // 이런식으로 문법을 작성하면 프로미스와 모양 형태가 같다.
+
+  new Promise(resolve => setTimeout(() => resolve())).then(add1).then(add10).then(log) // Promise 역시도 값이 없는경우 원치않은 결과가 발생된다.
+  new Promise(resolve => setTimeout(() => resolve(10), 1000)).then(add1).then(add10).then(log) // Promise 는 비동기적이 상황을 안전하게 앞성하게 해주는 다른형식의 모나드이다.
+</script>
