@@ -1,0 +1,45 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+# Test
+
+드디어 틀리지않고 한번에 다 구현하였다.
+go 함수 구현만 제외하고 대부분 이해하였다.
+주말에 go, pipe 쪽 개념만 다시보면 될거 같다.
+
+go, pipe
+<script src="../lib/fn_10.js"></script>
+<script>
+  const products = [
+    { name: '아메리카노', price: 1500 },
+    { name: '아이스라떼', price: 2000 },
+    { name: '카페라떼', price: 2500 },
+    { name: '모카라떼', price: 3000 },
+    { name: '콜드브루', price: 2500 },
+  ]
+
+  go(products,
+    filter(p => p.price < 3000),
+    map(p => p.price),
+    reduce((acc, cur) => acc + cur),
+    log)
+
+  go(products,
+    find(p => p.name === '아메리카노'),
+    log)
+
+  const arr1 = [[[1, 2]], [3, 4], [5, 6], [7, 8], [9, 10]]
+  go(arr1,
+    flatten,
+    log)
+
+  const arr2 = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10]]
+  go(arr2,
+    L.flatMap(L.map(a => a * 2)),
+    takeAll,
+    log)
+
+  go(arr2,
+    flatMap(map(a => a * 10)),
+    log)
+
+</script>
