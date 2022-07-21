@@ -1,0 +1,39 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+# Kleisli Composition 관점에서의 Promise
+
+- Promise 는 Kleisli Composition 을 지원하는 도구이다.
+- 오류가 있을 수 있는 상황에서의 함수의 합성을 안전하게하는 하나의 규칙이다.
+
+<script src="../lib/fn_10.js"></script>
+<script>
+  (async () => {
+    const f = a => a + 1
+    const g = a => a * a
+    const fg = a => f(g(a))
+
+    // f(g(x)) === f(g(x)) 같은함수면 같은 결과를 리턴할 것이다.
+
+    // f(g(x)) === g(x)
+    // 만일 g 에서 에러가 난 경우에서는 g.f 를 한 결과나 g 만을 한 결과나 같은 결과를 만든느 식으로 합성 되는것을 클레이슬리 컴포지션이라고 한다.
+    // 원하지 않는 결과륾 만들었을적에 g 가 리턴하는 값이 f 를 합성해도 마치 합성을 하지 않은것과 같이 양변이 동일하게 만들어지는 규칙을 가진 합성이다.
+
+    const users = [
+      { id: 1, name: '홍길동' },
+      { id: 2, name: '강감찬' },
+      { id: 3, name: '잡스' },
+    ]
+    const getUserById = (id) => find(u => u.id === id, users) || Promise.reject('Not Found User')
+    const getName = ({ name }) => name
+
+    const getUserNameById = async id => Promise.resolve(id).then(getUserById).then(getName).catch(a => a)
+    // Promise.resolve().then(f).then(g).then(log).catch(log)
+    await getUserNameById(2).then(log)
+
+    users.pop()
+    users.pop()
+
+    getUserNameById(2).then(log)
+  })();
+
+</script>
