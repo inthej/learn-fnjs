@@ -16,15 +16,36 @@ L.filter = curry(function* (f, iter) {
   }
 })
 
+const go1 = (a, f) => a instanceof Promise ? a.then(f) : f(a)
+
 const reduce = curry(function (f, acc, iter) {
   if (!iter) {
     iter = acc[Symbol.iterator]()
     acc = iter.next().value
   }
-  for (const a of iter) {
-    acc = f(acc, a)
-  }
-  return acc
+
+  // Promise 체인이 연속적으로 일어나는  불필요한 로드로 인한 성능 저하가 발생한다.
+  // for (const a of iter) {
+  //   acc = f(acc, a)
+  // }
+  // return acc
+
+  // 하나의 call stack 에서의 처리 방법.. 유명함수 사용
+  // return function recur(acc) {
+  //   for (const a of iter) {
+  //     acc = f(acc ,a)
+  //     if (acc instanceof Promise) return acc.then(recur)
+  //   }
+  //   return acc
+  // } (acc)
+
+  return go1(acc, function recur(acc) {
+    for (const a of iter) {
+      acc = f(acc, a)
+      if (acc instanceof Promise) return acc.then(recur)
+    }
+    return acc
+  })
 })
 
 const take = curry(function (l, iter) {
