@@ -1,0 +1,35 @@
+<meta charset="UTF-8">
+<script>const log = console.log</script>
+# test
+<script src="../lib/fn_11.js"></script>
+<script>
+  const products = [
+    { name: 'A', price: 1500 },
+    { name: 'B', price: 2000 },
+    { name: 'C', price: 2500 },
+    { name: 'D', price: 3000 },
+    { name: 'E', price: 3500 },
+  ]
+
+  go(products,
+    filter(p => p.price < 3000),
+    map(p => p.price),
+    reduce((acc, cur) => acc + cur),
+    log)
+
+  const arr = [[1, 2], [3, 4], [5, 6], [7, 8], [9, 10]]
+  go(arr,
+    L.flatten,
+    takeAll,
+    log)
+
+  go(arr,
+    flatMap(map(a => a * 3)),
+    takeAll,
+    log)
+
+  go(products,
+    find(p => p.name === 'A'),
+    log)
+
+</script>
